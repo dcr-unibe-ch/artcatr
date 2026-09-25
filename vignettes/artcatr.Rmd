@@ -20,9 +20,9 @@ library(artcatr)
 
 # Overview
 
-`artcatr` calculates sample size and power for a two-group randomized trial with an ordered categorical outcome, analysed by the proportional-odds (cumulative-logit) model. It uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This packages implements the Stata functions (`artcat`) into R (`artcatr`). `artcatr` requires that the most-right level probabilities need to be specified, that is, the input vectors `pc` (or `pe`) need to sum up to one.
+`artcatr` calculates sample size and power for a two-arm randomized trial with an ordered categorical outcome, analysed by a proportional-odds model. It uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This packages implements the Stata functions (`artcat`, White et al. (2023)) into R (`artcatr`). `artcatr` requires that the most-right level probabilities need to be specified, that is, the input vectors `pc` (or `pe`) need to sum up to one.
 
-The examples below reproduce the worked examples from White et al (2023), and match the results of the Stata `artcat` command.
+The examples below reproduce the worked examples from White et al. (2023).
 
 # Favourable and unfavourable outcomes
 
@@ -38,23 +38,6 @@ Outcome levels are always supplied in increasing order (level 1, 2, ..., K), but
 | `> 1`    | `TRUE`       | substantial-superiority  |
 | `> 1`    | `FALSE`      | non-inferiority          |
 
-For example, with `margin = 1.33` (odds ratio null hypothesis) and the same anticipated probabilities, flipping `favourable` changes the resulting trial type:
-
-```{r}
-artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
-       or = 1, 
-       margin = 1.33,
-       power = .8, 
-       favourable = TRUE, 
-       quiet = TRUE)$trialtype
-
-artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
-       or = 1, 
-       margin = 1.33,
-       power = .8, 
-       favourable = FALSE, 
-       quiet = TRUE)$trialtype
-```
 
 If `favourable` is left as `NULL` (the default), `artcatr()` infers the direction from whether the anticipated average odds ratio lies above or below `margin`, and flags the result as `(inferred)` in the printed summary. It is good practice, however, to set `favourable` explicitly based on clinical knowledge of the outcome scale, rather than relying on inference from the anticipated effect size:
 

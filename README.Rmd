@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 # `artcatr`
 
-`artcatr` calculates sample size and power for a two-group randomized trial with an ordinal outcome, analysed by a proportional-odds model. It uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This packages implements the Stata functions (`artcat`) into R (`artcatr`).
+`artcatr` calculates sample size and power for a two-arm randomized trial with an ordinal outcome, analysed by a proportional-odds model. It uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This package implements the Stata functions (`artcat`, White et al. (2023)) into R (`artcatr`).
 
 
 ## Installation
@@ -31,7 +31,5 @@ This may require `Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")` if packa
 ```{r, message=FALSE}
 library(artcatr)
 ```
-
-
 
 
