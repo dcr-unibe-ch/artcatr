@@ -4,7 +4,7 @@ Version: 0.1.0
 Authors: André Moser
 Maintainer: André Moser <andre.moser@unibe.ch>
 Description: Sample size and power calculations for a two-group randomized
-    trial with an ordered categorical outcome analysed by the
+    trial with an ordinal outcome analysed by a
     proportional-odds model. Implements the 'ologit' method of White,
     Marley-Zagar, Morris, Parmar, Royston & Babiker (2023)
     <doi:10.1177/1536867X231161934> in R.
