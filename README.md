@@ -3,21 +3,19 @@
 
 # `artcatr`
 
-`artcatr` calculates sample size and power for a two-arm randomized
-trial with an ordinal outcome, analysed by the
-proportional-odds model. It uses the `ologit` method
-of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This
-packages implements the Stata functions (`artcat`) into R (`artcatr`).
+`artcatr` calculates sample size and power for a two-group randomized
+trial with an ordinal outcome, analysed by a proportional-odds model. It
+uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston
+& Babiker (2023). This packages implements the Stata functions
+(`artcat`) into R (`artcatr`).
 
 ## Installation
 
 `artcatr` is easiest to install via
 
-<!-- ```{r, eval = FALSE} -->
-
-<!-- install.packages('CTUtemplate', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org')) -->
-
-<!-- ``` -->
+``` r
+install.packages('artcat', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org'))
+```
 
 Linux users might have to install from source:
 
