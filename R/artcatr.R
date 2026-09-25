@@ -28,6 +28,7 @@
 #'     control group
 #'   levels: Number of levels remaining after dropping any levels with
 #'     zero probability in both arms
+#' @noRd
 
 .artcatr_build_probs <- function(pc, cumulative, pe, or, rr, margin) {
   p1sum <- if (cumulative) pc else cumsum(pc)
@@ -137,7 +138,7 @@
 #' coef(fit_polr)             # 0.7505
 #' sqrt(vcov(fit_polr))[1, 1] # 3.6513
 #' fit_polr$zeta              # -0.8953, 0.3867, 1.5184
-#' 
+#' @noRd
 .artcatr_fit_cumlogit <- function(level_int, x, w, offset = rep(0, length(x)),
                                   estimate_b = TRUE) {
   levels_n <- max(level_int)
@@ -220,7 +221,7 @@
 #' fit_polr <- MASS::polr(y ~ x, data = df, weights = w, Hess = TRUE)
 #' coef(fit_polr)               # 0.751
 #' sqrt(vcov(fit_polr))[1, 1]   # 3.651
-
+#' @noRd
 .artcatr_ologit_fit <- function(p1, p2, A, margin) {
   levels_n <- length(p1)
   level_int <- rep(seq_len(levels_n), 2)
