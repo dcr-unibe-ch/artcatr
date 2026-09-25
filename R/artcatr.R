@@ -1,5 +1,5 @@
-# artcatr: sample size / power for a 2-group trial with an ordered categorical
-# outcome analysed by the proportional-odds model.
+# artcatr: sample size / power for a two-arm trial with an ordinal
+# outcome
 #
 # R implementation of White, Marley-Zagar, Morris, Parmar, Royston & Babiker
 # (2023) "artcat: Sample-size calculation for an ordered categorical outcome",
