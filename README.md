@@ -11,7 +11,13 @@ White et al. (2023)) into R (`artcatr`).
 
 ## Installation
 
-`artcatr` is easiest to install via
+`artcatr` can be installed via
+
+``` r
+install.packages('artcatr', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+or via
 
 ``` r
 remotes::install_github("dcr-unibe-ch/artcatr")
