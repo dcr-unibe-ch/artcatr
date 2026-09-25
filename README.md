@@ -14,12 +14,6 @@ uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston
 `artcatr` is easiest to install via
 
 ``` r
-install.packages('artcat', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org'))
-```
-
-Linux users might have to install from source:
-
-``` r
 remotes::install_github("dcr-unibe-ch/artcatr")
 ```
 
