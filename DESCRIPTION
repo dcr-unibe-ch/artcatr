@@ -1,8 +1,7 @@
 Package: artcatr
 Title: Sample Size and Power for an Ordered Categorical Outcome
 Version: 0.1.0
-Authors: André Moser
-Maintainer: André Moser <andre.moser@unibe.ch>
+Authors@R: person("André", "Moser", role = c("cre", "aut"), email = "andre.moser@unibe.ch")
 Description: Sample size and power calculations for a two-group randomized
     trial with an ordinal outcome analysed by a
     proportional-odds model. Implements the 'ologit' method of White,
