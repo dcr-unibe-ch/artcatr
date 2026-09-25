@@ -18,7 +18,13 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-`artcatr` is easiest to install via
+`artcatr` can be installed via 
+
+```{r, eval = FALSE}
+install.packages('artcatr', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+or via
 
 ```{r, eval = FALSE}
 remotes::install_github("dcr-unibe-ch/artcatr")
