@@ -72,7 +72,7 @@
 artcatr</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/dcr-unibe-ch/artcatr/blob/main/vignettes/artcatr.Rmd" class="external-link"><code>vignettes/artcatr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/dcr-unibe-ch/artcatr/blob/fixes/vignettes/artcatr.Rmd" class="external-link"><code>vignettes/artcatr.Rmd</code></a></small>
       <div class="hidden name"><code>artcatr.Rmd</code></div>
 
     </div>
@@ -84,18 +84,17 @@ artcatr</h1>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><code>artcatr</code> calculates sample size and power for a two-group
-randomized trial with an ordered categorical outcome, analysed by the
-proportional-odds (cumulative-logit) model. It uses the
-<code>ologit</code> method of White, Marley-Zagar, Morris, Parmar,
-Royston &amp; Babiker (2023). This packages implements the Stata
-functions (<code>artcat</code>) into R (<code>artcatr</code>).
-<code>artcatr</code> requires that the most-right level probabilities
-need to be specified, that is, the input vectors <code>pc</code> (or
-<code>pe</code>) need to sum up to one.</p>
-<p>The examples below reproduce the worked examples from White et al
-(2023), and match the results of the Stata <code>artcat</code>
-command.</p>
+<p><code>artcatr</code> calculates sample size and power for a two-arm
+randomized trial with an ordered categorical outcome, analysed by a
+proportional-odds model. It uses the <code>ologit</code> method of
+White, Marley-Zagar, Morris, Parmar, Royston &amp; Babiker (2023). This
+packages implements the Stata functions (<code>artcat</code>, White et
+al. (2023)) into R (<code>artcatr</code>). <code>artcatr</code> requires
+that the most-right level probabilities need to be specified, that is,
+the input vectors <code>pc</code> (or <code>pe</code>) need to sum up to
+one.</p>
+<p>The examples below reproduce the worked examples from White et
+al. (2023).</p>
 </div>
 <div class="section level2">
 <h2 id="favourable-and-unfavourable-outcomes">Favourable and unfavourable outcomes<a class="anchor" aria-label="anchor" href="#favourable-and-unfavourable-outcomes"></a>
@@ -148,25 +147,6 @@ than control). Following White et al (2023, sec. 3),
 </tr>
 </tbody>
 </table>
-<p>For example, with <code>margin = 1.33</code> (odds ratio null
-hypothesis) and the same anticipated probabilities, flipping
-<code>favourable</code> changes the resulting trial type:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.010</span>, <span class="fl">.021</span>, <span class="fl">.099</span>, <span class="fl">.103</span>, <span class="fl">.384</span>, <span class="fl">.383</span><span class="op">)</span>, </span>
-<span>       or <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>       margin <span class="op">=</span> <span class="fl">1.33</span>,</span>
-<span>       power <span class="op">=</span> <span class="fl">.8</span>, </span>
-<span>       favourable <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>       quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">trialtype</span></span>
-<span><span class="co">#&gt; [1] "substantial-superiority"</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.010</span>, <span class="fl">.021</span>, <span class="fl">.099</span>, <span class="fl">.103</span>, <span class="fl">.384</span>, <span class="fl">.383</span><span class="op">)</span>, </span>
-<span>       or <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>       margin <span class="op">=</span> <span class="fl">1.33</span>,</span>
-<span>       power <span class="op">=</span> <span class="fl">.8</span>, </span>
-<span>       favourable <span class="op">=</span> <span class="cn">FALSE</span>, </span>
-<span>       quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">trialtype</span></span>
-<span><span class="co">#&gt; [1] "non-inferiority"</span></span></code></pre></div>
 <p>If <code>favourable</code> is left as <code>NULL</code> (the
 default), <code><a href="../reference/artcatr.html">artcatr()</a></code> infers the direction from whether the
 anticipated average odds ratio lies above or below <code>margin</code>,
@@ -174,7 +154,7 @@ and flags the result as <code>(inferred)</code> in the printed summary.
 It is good practice, however, to set <code>favourable</code> explicitly
 based on clinical knowledge of the outcome scale, rather than relying on
 inference from the anticipated effect size:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.018</span>, <span class="fl">.036</span>, <span class="fl">.156</span>, <span class="fl">.141</span>, <span class="fl">.39</span>, <span class="fl">.259</span><span class="op">)</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">1.77</span>, </span>
 <span>       power <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span></span>
@@ -222,7 +202,7 @@ Here the left-most level is the <em>least</em> favourable outcome, so
 <code>favourable = FALSE</code>.</p>
 <p>By default <code><a href="../reference/artcatr.html">artcatr()</a></code> uses the new <code>ologit</code>
 method (with <code>variance = "NA"</code>):</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.018</span>, <span class="fl">.036</span>, <span class="fl">.156</span>, <span class="fl">.141</span>, <span class="fl">.39</span>, <span class="fl">.259</span><span class="op">)</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">1.77</span>, </span>
 <span>       power <span class="op">=</span> <span class="fl">.8</span>,</span>
@@ -263,7 +243,7 @@ et al (2023).</p>
 <p>Whitehead’s (1993) original method is available via
 <code>method = "whitehead"</code>, for comparison with the newer
 <code>ologit</code> method:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.018</span>, <span class="fl">.036</span>, <span class="fl">.156</span>, <span class="fl">.141</span>, <span class="fl">.39</span>, <span class="fl">.259</span><span class="op">)</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">1.77</span>, </span>
 <span>       power <span class="op">=</span> <span class="fl">.8</span>,</span>
@@ -305,7 +285,7 @@ et al (2023).</p>
 <p>Whitehead’s (1993) method is implemented in the <code>psamsize</code>
 function in the ‘Hmisc’ package. The small difference to the
 <code>artcatr</code> Whitehead option is due to ceiling of numbers.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.018</span>, <span class="fl">.036</span>, <span class="fl">.156</span>, <span class="fl">.141</span>, <span class="fl">.39</span>, <span class="fl">.259</span><span class="op">)</span></span>
 <span><span class="va">or</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">1.77</span></span>
 <span><span class="va">pe</span> <span class="op">&lt;-</span> <span class="va">or</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span> <span class="op">+</span> <span class="va">or</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span><span class="op">)</span></span>
@@ -327,7 +307,7 @@ function in the ‘Hmisc’ package. The small difference to the
 expressed as an odds ratio defining the null hypothesis. Here the
 anticipated odds ratio is <code>or = 1</code> (no average treatment
 effect), and the non-inferiority margin is an odds ratio of 1.33:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.010</span>, <span class="fl">.021</span>, <span class="fl">.099</span>, <span class="fl">.103</span>, <span class="fl">.384</span>, <span class="fl">.383</span><span class="op">)</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>       margin <span class="op">=</span> <span class="fl">1.33</span>,</span>
@@ -369,7 +349,7 @@ proportional odds assumption holds for testing the null hypothesis of no
 treatment effect. <code>artcatr</code> also allows for non-proportional
 odds by specifying <code>pe</code> and <code>pc</code> directly instead
 of a common odds ratio.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.010</span>, <span class="fl">.021</span>, <span class="fl">.099</span>, <span class="fl">.103</span>, <span class="fl">.384</span>, <span class="fl">.383</span><span class="op">)</span>, </span>
 <span>       pe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.020</span>, <span class="fl">.021</span>, <span class="fl">.099</span>, <span class="fl">.103</span>, <span class="fl">.384</span>, <span class="fl">.373</span><span class="op">)</span>, </span>
 <span>       power <span class="op">=</span> <span class="fl">.9</span>, </span>
@@ -411,7 +391,7 @@ probabilities (<code>cumulative = TRUE</code>), which can be more
 natural when the outcome levels are thresholds on an underlying
 scale.</p>
 <p>A three-level outcome:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.4</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>       cumulative <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">.375</span>, </span>
@@ -442,7 +422,7 @@ scale.</p>
 <span><span class="co">#&gt; Sample size per group (calculated)    108 108</span></span>
 <span><span class="co">#&gt; ----------------------------------------------------------------------</span></span></code></pre></div>
 <p>A four-level outcome:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.1</span>, <span class="fl">.4</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>       cumulative <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">.375</span>, </span>
@@ -475,7 +455,7 @@ scale.</p>
 <span><span class="co">#&gt; ----------------------------------------------------------------------</span></span></code></pre></div>
 <p>A three-level outcome with a different split of probability across
 levels:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.7</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>       cumulative <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>       or <span class="op">=</span> <span class="fl">.375</span>, </span>
@@ -513,7 +493,7 @@ levels:</p>
 <code>"artcatr"</code>, containing the computed sample size (or power),
 the anticipated probability table, and other design parameters. Use
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> for a tidy version of the probability table:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/artcatr.html">artcatr</a></span><span class="op">(</span>pc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.018</span>, <span class="fl">.036</span>, <span class="fl">.156</span>, <span class="fl">.141</span>, <span class="fl">.39</span>, <span class="fl">.259</span><span class="op">)</span>, </span>
 <span>              or <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">1.77</span>, </span>
 <span>              power <span class="op">=</span> <span class="fl">.8</span>,</span>
