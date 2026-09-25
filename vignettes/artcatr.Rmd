@@ -1,0 +1,203 @@
+---
+title: "Sample size calculation for ordinal outcomes: artcatr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{artcatr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(artcatr)
+```
+
+# Overview
+
+`artcatr` calculates sample size and power for a two-group randomized trial with an ordered categorical outcome, analysed by the proportional-odds (cumulative-logit) model. It uses the `ologit` method of White, Marley-Zagar, Morris, Parmar, Royston & Babiker (2023). This packages implements the Stata functions (`artcat`) into R (`artcatr`). `artcatr` requires that the most-right level probabilities need to be specified, that is, the input vectors `pc` (or `pe`) need to sum up to one.
+
+The examples below reproduce the worked examples from White et al (2023), and match the results of the Stata `artcat` command.
+
+# Favourable and unfavourable outcomes
+
+Outcome levels are always supplied in increasing order (level 1, 2, ..., K), but that ordering says nothing about which end of the scale represents a *good* outcome. White et al (2023) therefore introduce a `favourable` option: `favourable = TRUE` means level 1 (the left-most level) is the most favourable outcome and level K is the least favourable, and vice versa.
+
+`favourable` determines how a `margin` (expressed as an odds ratio for the null hypothesis) is interpreted, i.e. whether the design is a superiority, non-inferiority, or substantial-superiority trial (that is, a superiority trial showing that the treatment is substantially - by a `margin` - superior than control). Following White et al (2023, sec. 3), `artcatr()` classifies the trial as follows:
+
+| `margin` | `favourable` | Trial type              |
+|----------|--------------|--------------------------|
+| `= 1`    | either       | superiority              |
+| `< 1`    | `TRUE`       | non-inferiority          |
+| `< 1`    | `FALSE`      | substantial-superiority  |
+| `> 1`    | `TRUE`       | substantial-superiority  |
+| `> 1`    | `FALSE`      | non-inferiority          |
+
+For example, with `margin = 1.33` (odds ratio null hypothesis) and the same anticipated probabilities, flipping `favourable` changes the resulting trial type:
+
+```{r}
+artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
+       or = 1, 
+       margin = 1.33,
+       power = .8, 
+       favourable = TRUE, 
+       quiet = TRUE)$trialtype
+
+artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
+       or = 1, 
+       margin = 1.33,
+       power = .8, 
+       favourable = FALSE, 
+       quiet = TRUE)$trialtype
+```
+
+If `favourable` is left as `NULL` (the default), `artcatr()` infers the direction from whether the anticipated average odds ratio lies above or below `margin`, and flags the result as `(inferred)` in the printed summary. It is good practice, however, to set `favourable` explicitly based on clinical knowledge of the outcome scale, rather than relying on inference from the anticipated effect size:
+
+```{r}
+artcatr(pc = c(.018, .036, .156, .141, .39, .259), 
+       or = 1 / 1.77, 
+       power = .8)
+```
+
+# Examples
+
+The following examples reproduces the results from White et al. (2023).
+
+## A six-level ordered outcome
+
+The FLU-IVIG trial (Davey et al 2019) had a six-level ordinal outcome. Anticipated control-arm probabilities are given via `pc`, one per level including the right-most, and the anticipated treatment effect via a common odds ratio `or`. Here the left-most level is the *least* favourable outcome, so `favourable = FALSE`.
+
+By default `artcatr()` uses the new `ologit` method (with `variance = "NA"`):
+
+```{r}
+artcatr(pc = c(.018, .036, .156, .141, .39, .259), 
+       or = 1 / 1.77, 
+       power = .8,
+       favourable = FALSE)
+```
+
+This matches the sample size (n = 322, 161 per arm) reported by White et al (2023).
+
+## Comparison with Whitehead's method
+
+Whitehead's (1993) original method is available via `method = "whitehead"`, for comparison with the newer `ologit` method:
+
+```{r}
+artcatr(pc = c(.018, .036, .156, .141, .39, .259), 
+       or = 1 / 1.77, 
+       power = .8,
+       favourable = FALSE, 
+       method = "whitehead")
+```
+
+Here Whitehead's method gives a slightly smaller sample size (n = 320) than the default `ologit` method (n = 322).
+
+## Comparison with psamsize from Hmisc
+
+Whitehead's (1993) method is implemented in the `psamsize` function in the 'Hmisc' package. The small difference to the `artcatr` Whitehead option is due to ceiling of numbers. 
+
+```{r}
+pc <- c(.018, .036, .156, .141, .39, .259)
+or <- 1 / 1.77
+pe <- or * cumsum(pc) / (1 - cumsum(pc) + or * cumsum(pc))
+pe <- diff(c(0, pe))
+pbar <- (pc + pe) / 2
+
+Hmisc::posamsize(p = pbar,
+                 odds.ratio = or,
+                 alpha = 0.05,
+                 power = 0.8)
+```
+
+# Non-inferiority trials
+
+A non-inferiority trial is specified via `margin`, expressed as an odds ratio defining the null hypothesis. Here the anticipated odds ratio is `or = 1` (no average treatment effect), and the non-inferiority margin is an odds ratio of 1.33:
+
+```{r}
+artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
+       or = 1, 
+       margin = 1.33,
+       power = .8, 
+       favourable = FALSE)
+```
+
+# Non-proportional odds
+
+Long et al. (2025) highlights that it is not relevant that the proportional odds assumption holds for testing the null hypothesis of no treatment effect. `artcatr` also allows for non-proportional odds by specifying `pe` and `pc` directly instead of a common odds ratio.
+
+```{r}
+artcatr(pc = c(.010, .021, .099, .103, .384, .383), 
+       pe = c(.020, .021, .099, .103, .384, .373), 
+       power = .9, 
+       favourable = FALSE)
+```
+
+# Cumulative probabilities
+
+Anticipated probabilities may instead be specified as cumulative probabilities (`cumulative = TRUE`), which can be more natural when the outcome levels are thresholds on an underlying scale.
+
+A three-level outcome:
+
+```{r}
+artcatr(pc = c(.01, .4, 1), 
+       cumulative = TRUE, 
+       or = .375, 
+       power = .9,
+       favourable = FALSE)
+```
+
+A four-level outcome:
+
+```{r}
+artcatr(pc = c(.01, .1, .4, 1), 
+       cumulative = TRUE, 
+       or = .375, 
+       power = .9,
+       favourable = FALSE)
+```
+
+A three-level outcome with a different split of probability across levels:
+
+```{r}
+artcatr(pc = c(.4, .7, 1), 
+       cumulative = TRUE, 
+       or = .375, 
+       power = .9,
+       favourable = FALSE)
+```
+
+# Working with the results
+
+`artcatr()` returns (invisibly) a list of class `"artcatr"`, containing the
+computed sample size (or power), the anticipated probability table, and other design parameters. Use `summary()` for a tidy version of the probability table:
+
+```{r}
+fit <- artcatr(pc = c(.018, .036, .156, .141, .39, .259), 
+              or = 1 / 1.77, 
+              power = .8,
+              favourable = FALSE, 
+              quiet = TRUE)
+summary(fit)
+```
+
+# References
+
+White IR, Marley-Zagar E, Morris TP, Parmar MKB, Royston P, Babiker AG (2023).
+artcat: Sample-size calculation for an ordered categorical outcome. *Stata
+Journal* 23(1):3-23. <doi:10.1177/1536867X231161934>
+
+Whitehead J (1993). Sample size calculations for ordered categorical data.
+*Statistics in Medicine* 12:2257-2271.
+
+Davey RT Jr, Fernandez-Cruz E, Markowitz N, et al (2019). Anti-influenza
+hyperimmune intravenous immunoglobulin for adults with influenza A or B
+infection (FLU-IVIG): a double-blind, randomised, placebo-controlled trial.
+*Lancet Respiratory Medicine* 7(11):951-963.
+
+Long Y, Wiegers EJA, Jacobs BC, Steyerberg EW, van Zwet EW (2025). Role of the proportional odds assumption for the analysis of ordinal outcomes in neurologic trials. *Neurology* 105(8):e214146.
+<doi:10.1212/WNL.0000000000214146>
